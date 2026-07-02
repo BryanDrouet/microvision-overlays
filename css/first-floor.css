@@ -1,0 +1,5 @@
+/* First Floor - Gradient Original */
+body {
+    background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+    background-attachment: fixed;
+}
