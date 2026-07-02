@@ -1,5 +1,5 @@
 /* Main Screen - Gradient Original */
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(0deg, #8400FC, #27014B);
     background-attachment: fixed;
 }
