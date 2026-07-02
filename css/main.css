@@ -33,44 +33,6 @@ body {
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding: clamp(15px, 2vw, 30px);
-}
-
-/* === STYLES GLOBAUX === */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    width: 100%;
-    height: 100%;
-}
-
-body {
-    width: 100vw;
-    height: 100vh;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    margin: 0;
-    padding: 0;
-}
-
-/* === CONTENEUR PRINCIPAL === */
-.screen {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
     padding: clamp(20px, 2.5vw, 40px);
 }
 
@@ -157,6 +119,10 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
+.grid.cols-4 {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
 /* === BOÎTES CONTENU === */
 .box {
     background: rgba(255, 255, 255, 0.1);
@@ -191,20 +157,6 @@ body {
     word-break: break-word;
 }
 
-/* === RESPONSIVE === */
-@media (max-width: 1024px) {
-    .grid.cols-3 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .grid.cols-2,
-    .grid.cols-3 {
-        grid-template-columns: 1fr;
-    }
-}
-
 /* === ZONES FLEX INDICATORS === */
 .indicators-zone {
     display: flex;
@@ -235,5 +187,11 @@ body {
     .header-info,
     .footer-info {
         font-size: clamp(12px, 1.8vw, 24px);
+    }
+}
+
+@media (max-width: 480px) {
+    .grid.cols-4 {
+        grid-template-columns: 1fr;
     }
 }
