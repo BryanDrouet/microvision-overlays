@@ -169,6 +169,12 @@ body {
     overflow: hidden;
 }
 
+/* First Floor - Gradient Original */
+body {
+    background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+    background-attachment: fixed;
+}
+
 /* === RESPONSIVE === */
 @media (max-width: 1024px) {
     .grid.cols-3,
