@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Floor - 4200x1200</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 4200px;
+            height: 1200px;
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .main-content {
+            flex: 1;
+        }
+        
+        h1 {
+            font-size: 100px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+        }
+        
+        .resolution {
+            font-size: 70px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature h3 {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .feature p {
+            font-size: 32px;
+            opacity: 0.9;
+        }
+        
+        .visual-indicator {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-left: 60px;
+        }
+        
+        .zone {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 3px solid white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            font-size: 50px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .zone:nth-child(1) {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .zone:nth-child(2) {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .info-bar {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 35px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px 30px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <h1>FIRST FLOOR</h1>
+            <div class="resolution">4200 × 1200 px</div>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3>🏢 Localisation</h3>
+                    <p>Étage 1</p>
+                </div>
+                <div class="feature">
+                    <h3>📡 Signal</h3>
+                    <p>Fort - 95%</p>
+                </div>
+                <div class="feature">
+                    <h3>🎯 Format</h3>
+                    <p>Ultra Wide</p>
+                </div>
+                <div class="feature">
+                    <h3>⏱️ Latence</h3>
+                    <p>&lt; 50ms</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="visual-indicator">
+            <div class="zone">ZONE A</div>
+            <div class="zone">ZONE B</div>
+        </div>
+    </div>
+    
+    <div class="info-bar">
+        LIVE - <span id="status">✓</span>
+    </div>
+    
+    <script>
+        let isConnected = true;
+        setInterval(() => {
+            isConnected = !isConnected;
+            document.getElementById('status').textContent = isConnected ? '✓' : '⚠';
+            document.getElementById('status').style.color = isConnected ? '#00ff00' : '#ffaa00';
+        }, 2000);
+    </script>
+</body>
+</html>
