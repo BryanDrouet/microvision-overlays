@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interface de diffusion vidéo dynamique pour intégration OBS et WebDisplays Minecraft.">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Studio Vidéo - MicroVision</title>
+    
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div id="rgpd-consent-banner" class="rgpd-banner" aria-hidden="false" role="region" aria-label="Consentement aux cookies">
+        <p>Cette application nécessite des cookies techniques pour maintenir la connexion au flux vidéo en direct.</p>
+        <div class="rgpd-actions">
+            <button id="accept-cookies" class="btn btn-primary" aria-label="Accepter les cookies">Accepter</button>
+            <button id="refuse-cookies" class="btn btn-secondary" aria-label="Refuser les cookies">Refuser</button>
+        </div>
+    </div>
+
+    <main id="app-container" class="app-container" aria-hidden="true">
+        <!-- Header -->
+        <header class="studio-header">
+            <div class="header-left">
+                <h1 id="stream-title">Caméra Principale</h1>
+                <span class="stream-info" id="stream-info">Flux inactif</span>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="live-status">En attente de connexion</span>
+                </div>
+                <a href="pages/cameras.html" class="btn btn-secondary" title="Gérer les caméras">
+                    <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                    Caméras
+                </a>
+            </div>
+        </header>
+
+        <!-- Lecteur vidéo principal -->
+        <section class="video-container" id="video-wrapper" role="region" aria-label="Lecteur vidéo principal">
+            <div class="video-placeholder">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 7l-7 5 7 5V7z"></path>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                <p>En attente d'une source vidéo</p>
+            </div>
+        </section>
+
+        <!-- Contrôles et paramètres -->
+        <section class="controls-section">
+            <div class="controls-container">
+                <h2>Configuration du flux</h2>
+                
+                <form id="stream-settings-form" class="settings-form">
+                    <div class="form-group">
+                        <label for="stream-source-input">Source du flux (URL) :</label>
+                        <input 
+                            type="url" 
+                            id="stream-source-input" 
+                            name="streamSource" 
+                            placeholder="https://... ou rtmp://... ou ndi://..."
+                            required 
+                            aria-required="true">
+                        <small>Accepte : HTTP, HTTPS, RTMP, NDI, WebRTC</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="flux-type-select">Type de flux :</label>
+                        <select id="flux-type-select" name="fluxType">
+                            <option value="iframe">Iframe Web (HTML/Streamers)</option>
+                            <option value="video">Vidéo HTML5 (MP4/HLS)</option>
+                            <option value="ndi">NDI (Network)</option>
+                            <option value="canvas">Canvas 3D (WebGL)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camera-select">Caméra :</label>
+                        <select id="camera-select" name="cameraSelection">
+                            <option value="cam1">🎥 Caméra Grue (Cam 1)</option>
+                            <option value="cam2">📸 Caméra Trépied (Cam 2)</option>
+                            <option value="cam3">🎬 Caméra Mobile (Cam 3)</option>
+                            <option value="cam4">🚁 Caméra Drone (Cam 4)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quality-select">Qualité :</label>
+                        <select id="quality-select" name="qualityLevel">
+                            <option value="low">Basse (360p)</option>
+                            <option value="medium" selected>Moyenne (720p)</option>
+                            <option value="high">Haute (1080p)</option>
+                            <option value="ultra">Ultra (4K)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" id="update-stream-btn" class="btn btn-primary" aria-label="Mettre à jour le flux">
+                        <i data-lucide="refresh-cw" aria-hidden="true" style="width: 16px; height: 16px;"></i> 
+                        Mettre à jour
+                    </button>
+
+                    <button type="button" id="stop-stream-btn" class="btn btn-danger" aria-label="Arrêter le flux">
+                        <i data-lucide="stop-circle" aria-hidden="true" style="width: 16px; height: 16px;"></i>
+                        Arrêter
+                    </button>
+                </form>
+            </div>
+
+            <!-- Raccourcis caméras -->
+            <div class="camera-shortcuts">
+                <h3>Raccourcis caméras</h3>
+                <div class="shortcuts-grid">
+                    <button class="shortcut-btn" data-camera="cam1" aria-label="Charger Caméra Grue">
+                        <span>Grue</span>
+                    </button>
+                    <button class="shortcut-btn" data-camera="cam2" aria-label="Charger Caméra Trépied">
+                        <span>Trépied</span>
+                    </button>
+                    <button class="shortcut-btn" data-camera="cam3" aria-label="Charger Caméra Mobile">
+                        <span>Mobile</span>
+                    </button>
+                    <button class="shortcut-btn" data-camera="cam4" aria-label="Charger Caméra Drone">
+                        <span>Drone</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Presets de flux -->
+            <div class="presets-section">
+                <h3>Presets de flux</h3>
+                <div class="presets-grid" id="presets-grid">
+                    <!-- Rempli par JavaScript -->
+                </div>
+                <button type="button" id="add-preset-btn" class="btn btn-secondary" aria-label="Ajouter un preset">
+                    <i data-lucide="plus" aria-hidden="true" style="width: 16px; height: 16px;"></i>
+                    Ajouter un preset
+                </button>
+            </div>
+
+            <!-- Stats et diagnostics -->
+            <div class="stats-panel">
+                <h3>Informations du flux</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Débit :</span>
+                        <span class="stat-value" id="stat-bitrate">-- Mbps</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">FPS :</span>
+                        <span class="stat-value" id="stat-fps">-- fps</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Résolution :</span>
+                        <span class="stat-value" id="stat-resolution">-- p</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Latence :</span>
+                        <span class="stat-value" id="stat-latency">-- ms</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Messages d'erreur -->
+        <div id="error-container" class="error-container" role="alert" aria-hidden="true"></div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gestionnaire de caméras pour WebDisplays Minecraft">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Gestionnaire de Caméras - MicroVision</title>
+    
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="cameras.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <main class="cameras-main">
+        <!-- Header -->
+        <header class="cameras-header">
+            <div class="header-content">
+                <h1>🎥 Gestionnaire de Caméras</h1>
+                <p class="header-subtitle">Configurez et gérez vos caméras WebDisplays</p>
+            </div>
+            <a href="../index.html" class="btn btn-secondary btn-back">
+                <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+                Retour à l'interface principale
+            </a>
+        </header>
+
+        <!-- Vue de grille des caméras -->
+        <section class="cameras-grid-section">
+            <h2>Vos caméras</h2>
+            <div class="cameras-grid" id="cameras-grid">
+                <!-- Rempli par JavaScript -->
+            </div>
+        </section>
+
+        <!-- Ajouter une nouvelle caméra -->
+        <section class="add-camera-section">
+            <h2>Ajouter une nouvelle caméra</h2>
+            <form id="add-camera-form" class="add-camera-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="camera-id">ID de la caméra :</label>
+                        <input type="text" id="camera-id" name="cameraId" placeholder="cam5" required>
+                        <small>Exemple : cam5, cam_drone, main_camera</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camera-name">Nom :</label>
+                        <input type="text" id="camera-name" name="cameraName" placeholder="Ma nouvelle caméra" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camera-icon">Emoji :</label>
+                        <input type="text" id="camera-icon" name="cameraIcon" placeholder="🎬" maxlength="2">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camera-description">Description :</label>
+                        <textarea id="camera-description" name="cameraDescription" placeholder="Description de cette caméra" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camera-quality">Qualité par défaut :</label>
+                        <select id="camera-quality" name="cameraQuality">
+                            <option value="low">Basse (360p)</option>
+                            <option value="medium" selected>Moyenne (720p)</option>
+                            <option value="high">Haute (1080p)</option>
+                            <option value="ultra">Ultra (4K)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camera-flux-url">URL du flux :</label>
+                        <input type="url" id="camera-flux-url" name="cameraFluxUrl" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camera-flux-type">Type de flux :</label>
+                        <select id="camera-flux-type" name="cameraFluxType">
+                            <option value="iframe">Iframe Web</option>
+                            <option value="video">Vidéo HTML5</option>
+                            <option value="ndi">NDI</option>
+                            <option value="canvas">Canvas WebGL</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                            Ajouter la caméra
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Liste détaillée des caméras -->
+        <section class="cameras-list-section">
+            <h2>Configuration détaillée</h2>
+            <div class="cameras-list" id="cameras-list">
+                <!-- Rempli par JavaScript -->
+            </div>
+        </section>
+
+        <!-- Gestion des paramètres globaux -->
+        <section class="cameras-settings-section">
+            <h2>⚙️ Paramètres globaux</h2>
+            <div class="settings-content">
+                <div class="setting-item">
+                    <label for="auto-save-enabled">
+                        <input type="checkbox" id="auto-save-enabled" checked>
+                        Sauvegarde automatique des caméras
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <label for="show-all-cameras">
+                        <input type="checkbox" id="show-all-cameras" checked>
+                        Afficher toutes les caméras sur l'interface principale
+                    </label>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" id="export-cameras-btn" class="btn btn-secondary">
+                        <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                        Exporter les caméras
+                    </button>
+
+                    <button type="button" id="import-cameras-btn" class="btn btn-secondary">
+                        <i data-lucide="upload" style="width: 16px; height: 16px;"></i>
+                        Importer des caméras
+                    </button>
+
+                    <button type="button" id="reset-cameras-btn" class="btn btn-danger">
+                        <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+                        Réinitialiser par défaut
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Messages -->
+        <div id="notification-container" class="notification-container"></div>
+    </main>
+
+    <!-- Modal d'édition -->
+    <div id="edit-modal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Éditer caméra</h3>
+                <button type="button" class="btn-close" aria-label="Fermer">&times;</button>
+            </div>
+
+            <form id="edit-camera-form" class="edit-camera-form">
+                <div class="form-group">
+                    <label for="edit-camera-name">Nom :</label>
+                    <input type="text" id="edit-camera-name" name="cameraName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-camera-icon">Emoji :</label>
+                    <input type="text" id="edit-camera-icon" name="cameraIcon" maxlength="2">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-camera-description">Description :</label>
+                    <textarea id="edit-camera-description" name="cameraDescription" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-camera-quality">Qualité par défaut :</label>
+                    <select id="edit-camera-quality" name="cameraQuality">
+                        <option value="low">Basse (360p)</option>
+                        <option value="medium">Moyenne (720p)</option>
+                        <option value="high">Haute (1080p)</option>
+                        <option value="ultra">Ultra (4K)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-camera-flux-url">URL du flux :</label>
+                    <input type="url" id="edit-camera-flux-url" name="cameraFluxUrl">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-camera-flux-type">Type de flux :</label>
+                    <select id="edit-camera-flux-type" name="cameraFluxType">
+                        <option value="iframe">Iframe Web</option>
+                        <option value="video">Vidéo HTML5</option>
+                        <option value="ndi">NDI</option>
+                        <option value="canvas">Canvas WebGL</option>
+                    </select>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                    <button type="button" class="btn btn-secondary btn-cancel">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Input caché pour import -->
+    <input type="file" id="import-file-input" accept=".json" style="display: none;">
+
+    <script src="cameras.js"></script>
+</body>
+</html>
